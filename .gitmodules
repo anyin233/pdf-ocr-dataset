@@ -1,0 +1,3 @@
+[submodule "mathgen"]
+	path = mathgen
+	url = git@github.com:neldredge/mathgen.git

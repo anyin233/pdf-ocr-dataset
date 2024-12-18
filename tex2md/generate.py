@@ -4,8 +4,8 @@ import argparse
 from tqdm import tqdm
 import os
 from names_generator import generate_name
-import latex2markdown
 
+MATHGEN_PATH="../mathgen"
 print(generate_name(style="capital"))
 
 parser = argparse.ArgumentParser(description='Generate random data')
@@ -26,23 +26,13 @@ for index in tqdm(range(count)):
   author_count = random.choice(range(1, 5))
   authors = [generate_name(style="capital") for _ in range(author_count)]
 
-  full_command = ["./mathgen.pl", "--mode", "dir", "--dir", full_output_path]
+  full_command = [os.path.join(MATHGEN_PATH, "mathgen.pl"), "--mode", "dir", "--dir", full_output_path]
   
   for author in authors:
     full_command.append("--author")
     full_command.append(author)
   
   subprocess.run(full_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-  # get the name of .tex file
-  tex_file = [f for f in os.listdir(full_output_path) if f.endswith('.tex')][0]
-  tex_file = os.path.join(full_output_path, tex_file)
-  with open(tex_file, "r") as f:
-    latex_string = f.read()
-  
-  l2m = latex2markdown.LaTeX2Markdown(latex_string)
-  
-  makedown_string = l2m.to_markdown()
   
   
   

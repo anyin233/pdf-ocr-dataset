@@ -1,0 +1,2 @@
+names_generator==0.2.0
+tqdm

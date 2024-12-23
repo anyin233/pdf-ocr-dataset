@@ -36,12 +36,16 @@ def main(args):
     # Generate md files into output directory preserving relative paths
     rel_path = os.path.relpath(tex_file, ipath)
     md_file = os.path.join(opath, os.path.splitext(rel_path)[0] + ".md")
+    temp_docx_file = os.path.join(opath, os.path.splitext(rel_path)[0] + ".docx")
     bib_path = os.path.join(os.path.dirname(tex_file), "scigenbibfile.bib")
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(md_file), exist_ok=True)
     
     print(f"Converting {tex_file} to {md_file}")
-    subprocess.run(["pandoc", tex_file, "--bibliography", bib_path, "-C", "-f", "latex", "-t", "markdown", "-o", md_file])
+    subprocess.run(["pandoc", tex_file, "--filter", "pandoc-crossref", "--biblatex", "--citeproc", "--bibliography", bib_path, "-M reference-section-title=Reference", "-V biblio-title=Reference", "-f", "latex", "-t", "docx", "-o", temp_docx_file])
+    subprocess.run(["pandoc", temp_docx_file, "--filter", "pandoc-crossref", "-f", "docx", "-t", "markdown", "-o", md_file])
+    # Remove temporary docx file
+    # os.remove(temp_docx_file)
   
     # Add newline before $$ while preserving the content
     with open(md_file, "r") as f:
@@ -53,6 +57,12 @@ def main(args):
     
     with open(md_file, "w") as f:
       f.write(modified_content)
+    
+    # Copy tex source and pdf file to output directory
+    shutil.copy(tex_file, os.path.join(opath, os.path.relpath(tex_file, ipath)))
+    pdf_file = os.path.splitext(tex_file)[0] + ".pdf"
+    if os.path.exists(pdf_file):
+      shutil.copy(pdf_file, os.path.join(opath, os.path.relpath(pdf_file, ipath)))
 
 if __name__ == "__main__":
   args = parse_arg()

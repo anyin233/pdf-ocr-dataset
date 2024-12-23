@@ -1,0 +1,7 @@
+# Script to Generate Dataset for PDF OCR
+
+## Lorem Markdown
+Get random Markdown file from [Lorem Markdown](https://jaspervdj.be/lorem-markdownum/), and render it to PDF and HTML.
+
+## Mathgen Latex
+Generate random fake mathematics papers with [Mathgen](https://github.com/neldredge/mathgen) and render it to Markdown and PDF.

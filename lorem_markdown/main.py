@@ -3,10 +3,10 @@ import mistune
 from xhtml2pdf import pisa
 import argparse
 import os
-import shutil
 import random
 from tqdm import tqdm
 
+# set your lorem-markdown endpoint here
 ENDPOINT_URL = "https://jaspervdj.be/lorem-markdownum/markdown.txt?num-blocks={nblocks}"
 
 pisa.showLogging()
@@ -30,26 +30,25 @@ if os.path.exists(args.o):
                     checkpoint = index
             except:
                 pass
-  
-# os.makedirs(args.o)
-    
-for index in tqdm(range(args.n)):
-  if index < checkpoint:
-        continue
-  n_blocks = random.randint(args.min_b, args.max_b) 
-  markdown_text = requests.get(ENDPOINT_URL.format(nblocks=n_blocks)).text
-  markdown_html = mistune.markdown(markdown_text)
-  
-  output_path = os.path.join(args.o, str(index))
-  os.makedirs(output_path, exist_ok=True)
-  with open(os.path.join(output_path, "{}.md".format(index)), "w") as output_file:
-      output_file.write(markdown_text)
-      
-  with open(os.path.join(output_path, "{}.html".format(index)), "w") as output_file:
-      output_file.write(markdown_html)
 
-  with open(os.path.join(output_path, "{}.pdf".format(index)), "w+b") as output_file:
-      stat = pisa.CreatePDF(markdown_html, dest=output_file)
-      
-      if stat.err:
-          print(stat.err)
+
+for index in tqdm(range(args.n)):
+    if index < checkpoint:
+        continue
+    n_blocks = random.randint(args.min_b, args.max_b)
+    markdown_text = requests.get(ENDPOINT_URL.format(nblocks=n_blocks)).text
+    markdown_html = mistune.markdown(markdown_text)
+
+    output_path = os.path.join(args.o, str(index))
+    os.makedirs(output_path, exist_ok=True)
+    with open(os.path.join(output_path, "{}.md".format(index)), "w") as output_file:
+        output_file.write(markdown_text)
+
+    with open(os.path.join(output_path, "{}.html".format(index)), "w") as output_file:
+        output_file.write(markdown_html)
+
+    with open(os.path.join(output_path, "{}.pdf".format(index)), "w+b") as output_file:
+        stat = pisa.CreatePDF(markdown_html, dest=output_file)
+
+        if stat.err:
+            print(stat.err)

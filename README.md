@@ -1,5 +1,10 @@
 # Script to Generate Dataset for PDF OCR
 
+clone this repo:
+```bash
+git clone --recursive https://github.com/anyin233/pdf-ocr-dataset
+```
+
 ## Lorem Markdown
 Get random Markdown file from [Lorem Markdown](https://jaspervdj.be/lorem-markdownum/), and render it to PDF and HTML.
 
@@ -43,9 +48,30 @@ Generate random fake mathematics papers with [Mathgen](https://github.com/neldre
 ### Prerequisites
 
 - pandoc
-- pandoc-crossref
 - mathgen
 
 ### How to use
 
-TODO
+1. Install Dependences
+
+
+Install Pandoc follow [this](https://pandoc.org/installing.html) instruction
+
+```bash
+git submodule 
+pip install names_generator
+```
+
+2. Generate math paper
+
+```bash
+cd math_latex
+python generate.py --count <count of math paper> --output <output directory of paper>
+```
+
+3. Convert them to markdown
+
+```bash
+python tex2md.py -i <output directory of paper> -o <output directory of markdown>
+```
+
